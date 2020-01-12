@@ -1,0 +1,28 @@
+# Steps to run the code:
+-----------------------------
+
+
+# Run command:
+-------------
+compile test -DexecutionMode=LOCAL -Dbrowser=chrome -Dwebdriver.chrome.driver="PATH_TO_DRIVER_FILE"
+
+
+# Run configurations:
+-------------------
+
+1. executionMode:
+---------------
+The execution mode for the run. Can be one of the following values: LOCAL, BROWSERSTACK
+
+To run locally, you need to provide one of the following system property:
+webdriver.chrome.driver: the driver path for Chrome browser
+webdriver.gecko.driver: the driver path for Firefox browser
+
+To run on BrowserStack, you need to provide the following environment variables:
+BROWSERSTACK_USER: The username to access BrowserStack.
+BROWSERSTACK_TOKEN: The token to access BrowserStack.
+
+
+2. browser:
+---------
+The browser name to run on. Can be one of the following values: chrome, firefox
