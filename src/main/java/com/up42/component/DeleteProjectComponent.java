@@ -7,6 +7,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.up42.core.PageObject;
+import com.up42.data.TestData;
+import com.up42.util.Helper;
 
 public class DeleteProjectComponent extends PageObject {
 
@@ -27,6 +29,9 @@ public class DeleteProjectComponent extends PageObject {
   public NotificationComponent confirmProjectDeletion() {
     LOGGER.info("Clicking on the 'Delete' button...");
     deleteProjectButton.click();
+
+    // wait for the action to complete
+    Helper.sleep(TestData.SECOND_IN_MILLI);
 
     return new NotificationComponent();
   }

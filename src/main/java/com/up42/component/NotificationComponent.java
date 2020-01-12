@@ -21,7 +21,7 @@ public class NotificationComponent extends PageObject {
   @FindBy(xpath = "//div[contains(@class,'text')]")
   private WebElement notificationText;
 
-  /** @return A String representing the notification text */
+  /** @return A String representing the first notification text on the page */
   public String getNotificationText() {
     return notificationText.getText();
   }

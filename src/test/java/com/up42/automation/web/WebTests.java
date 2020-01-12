@@ -63,7 +63,7 @@ public class WebTests extends BaseTest {
   @Test(dependsOnMethods = "createNewProject")
   public void createNewWorkflow() {
     LOGGER.info("STEP 4 - Creating a new workflow.");
-    WorkflowPage workflowPage = projectPage.InitiateNewWorkflow();
+    WorkflowPage workflowPage = projectPage.initiateNewWorkflow();
     workflowPage.createNewWorkflow(
         TestData.NEW_WORKFLOW_NAME,
         TestData.NEW_WORKFLOW_DESCRIPTION,

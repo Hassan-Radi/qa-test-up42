@@ -81,7 +81,7 @@ public class ProjectPage extends PageObject {
    *
    * @return An instance of the WorkflowPage to use.
    */
-  public WorkflowPage InitiateNewWorkflow() {
+  public WorkflowPage initiateNewWorkflow() {
     LOGGER.info("Clicking on the 'Create Workflow' button...");
     createNewWorkflowButton.click();
 
