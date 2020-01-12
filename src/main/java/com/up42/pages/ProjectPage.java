@@ -18,7 +18,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.up42.component.CookieConsentComponent;
 import com.up42.component.DeleteProjectComponent;
 import com.up42.component.NotificationComponent;
 import com.up42.core.PageObject;
@@ -48,6 +47,9 @@ public class ProjectPage extends PageObject {
   @FindBy(id = "delete-project-button")
   private WebElement deleteProjectButton;
 
+  @FindBy(xpath = "//button[contains(text(),'Create Workflow')]")
+  private WebElement createNewWorkflowButton;
+
   /** @return A String representing the project name */
   public String getProjectName() {
     return projectNameText.getText();
@@ -67,13 +69,22 @@ public class ProjectPage extends PageObject {
     LOGGER.info("Clicking on the 'Settings' link...");
     projectSettingsLink.click();
 
-    LOGGER.info("Accepting the cookies first...");
-    new CookieConsentComponent().acceptCookies();
-
     LOGGER.info("Clicking on the 'Delete Project' button...");
     deleteProjectButton.click();
 
     LOGGER.info("Confirm the deletion by clicking on the 'Delete' button...");
     return new DeleteProjectComponent().confirmProjectDeletion();
+  }
+
+  /**
+   * Starts the process of creating a new workflow by clicking on the 'Create Workflow' button.
+   *
+   * @return An instance of the WorkflowPage to use.
+   */
+  public WorkflowPage InitiateNewWorkflow() {
+    LOGGER.info("Clicking on the 'Create Workflow' button...");
+    createNewWorkflowButton.click();
+
+    return new WorkflowPage();
   }
 }

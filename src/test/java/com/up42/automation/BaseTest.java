@@ -22,6 +22,8 @@ import org.testng.annotations.BeforeMethod;
 
 import com.up42.core.DriverManager;
 import com.up42.core.PageObject;
+import com.up42.data.TestData;
+import com.up42.util.Helper;
 
 /** Base test class for the common setup and driver creation for all the test cases. */
 public class BaseTest {
@@ -58,6 +60,9 @@ public class BaseTest {
 
   @AfterClass
   public static void tearDown() {
+    // Wait for a second before starting the teardown process for all actions to be done
+    Helper.sleep(TestData.SECOND_IN_MILLI);
+
     /**
      * clear after the test is done executing by terminating the running browser instance to prevent
      * memory leaks.

@@ -17,12 +17,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.up42.automation.BaseTest;
+import com.up42.component.CookieConsentComponent;
 import com.up42.component.NotificationComponent;
 import com.up42.data.TestData;
 import com.up42.pages.HomePage;
 import com.up42.pages.LandingPage;
 import com.up42.pages.LoginPage;
 import com.up42.pages.ProjectPage;
+import com.up42.pages.WorkflowPage;
 
 public class WebTests extends BaseTest {
 
@@ -40,6 +42,9 @@ public class WebTests extends BaseTest {
     LOGGER.info("STEP 3 - Login with valid credentials.");
     homePage = loginPage.login(TestData.EMAIL, TestData.PASSWORD);
     Assert.assertTrue(homePage.isWelcomeTextDisplayed(), "Welcome text is not displayed.");
+
+    LOGGER.info("Accepting the cookie consent dialog before you move on to the next test...");
+    new CookieConsentComponent().acceptCookies();
   }
 
   @Test(dependsOnMethods = "loginToWebsite")
@@ -53,6 +58,19 @@ public class WebTests extends BaseTest {
         projectPage.getProjectDescription(),
         TestData.NEW_PROJECT_DESCRIPTION,
         "Project description is incorrect.");
+  }
+
+  @Test(dependsOnMethods = "createNewProject")
+  public void createNewWorkflow() {
+    LOGGER.info("STEP 4 - Creating a new workflow.");
+    WorkflowPage workflowPage = projectPage.InitiateNewWorkflow();
+    workflowPage.createNewWorkflow(
+        TestData.NEW_WORKFLOW_NAME,
+        TestData.NEW_WORKFLOW_DESCRIPTION,
+        TestData.DATA_BLOCKS,
+        TestData.PROCESSING_BLOCKS);
+
+    // TODO: Verify that the components have been added successfully.
   }
 
   @AfterClass

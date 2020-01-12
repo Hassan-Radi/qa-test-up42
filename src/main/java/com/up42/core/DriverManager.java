@@ -58,7 +58,7 @@ public class DriverManager {
        * BrowserStack is unable to set the resolution of the browser, so we have to use Selenium to
        * force the window resolution after the driver is initialised.
        */
-      driver.manage().window().setSize(TestData.RESOLUTION_DIMENSION_VALUE);
+      driver.manage().window().maximize();
     }
 
     return driver;

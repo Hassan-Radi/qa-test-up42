@@ -88,7 +88,11 @@ public class TestData {
   public static final String NEW_PROJECT_NAME = "Project " + System.currentTimeMillis();
   public static final String NEW_PROJECT_DESCRIPTION =
       "Project Description " + System.currentTimeMillis();
-
   public static final String PROJECT_SUCCESSFULLY_DELETED_MESSAGE =
       "Your project was successfully deleted.";
+  public static final String NEW_WORKFLOW_NAME = "Workflow " + System.currentTimeMillis();
+  public static final String NEW_WORKFLOW_DESCRIPTION =
+      "Workflow Description " + System.currentTimeMillis();
+  public static Block[] DATA_BLOCKS = {new Block("Sentinel-2 L1C MSI AOI clipped", "by Sobloo")};
+  public static Block[] PROCESSING_BLOCKS = {new Block("Sharpening Filter", "by UP42")};
 }
