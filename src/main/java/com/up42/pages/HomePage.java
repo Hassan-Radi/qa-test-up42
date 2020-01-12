@@ -18,6 +18,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import com.up42.component.CreateProjectComponent;
 import com.up42.core.PageObject;
 
 public class HomePage extends PageObject {
@@ -33,8 +34,26 @@ public class HomePage extends PageObject {
   @FindBy(xpath = "//h1[text()='Welcome']")
   private WebElement welcomeHeaderText;
 
+  @FindBy(xpath = "//div[@heading='Projects']//button")
+  private WebElement startAProjectButton;
+
   /** @return True if the welcome text is displayed on the HomePage, false otherwise. */
   public boolean isWelcomeTextDisplayed() {
     return welcomeHeaderText.isDisplayed();
+  }
+
+  /**
+   * Clicks on the "Start a Project" button and then creates a new project with the given
+   * parameters.
+   *
+   * @param projectName The name to give to the new project.
+   * @param projectDescription The project description (an optional field).
+   * @return An instance of the ProjectPage with the new project in it.
+   */
+  public ProjectPage startProject(String projectName, String projectDescription) {
+    LOGGER.info("Clicking on the 'Start a Project' button...");
+    startAProjectButton.click();
+
+    return new CreateProjectComponent().createNewProject(projectName, projectDescription);
   }
 }

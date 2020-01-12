@@ -122,4 +122,19 @@ public class Helper {
 
     return Long.valueOf(alertText);
   }
+
+  /**
+   * Stops the current thread's execution for a few milliseconds. This is to be used with caution as
+   * static waits are not a good technique for waiting for element. ONLY use this to wait for
+   * animations to finish
+   *
+   * @param milliseconds The amount of milliseconds to wait for.
+   */
+  public static void sleep(long milliseconds) {
+    try {
+      Thread.sleep(milliseconds);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }

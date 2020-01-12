@@ -37,8 +37,8 @@ public class TestData {
 
   // Timeouts
   public static final int TEN_SECONDS = 10;
-  public static final int FIFTY_MILLI_SECONDS = 50;
-  public static final int FOUR_MILLISECONDS = 4000;
+  public static final int HALF_SECOND = 500;
+  public static final int SECOND_IN_MILLI = 1000;
   public static final int TWENTY_SECOND_WAIT_MILLI = 20000;
 
   // Selenium
@@ -85,4 +85,10 @@ public class TestData {
   public static final String LANDING_PAGE = "https://up42.com/";
   public static final String EMAIL = "hassan.muhammad1990@gmail.com";
   public static final String PASSWORD = "aWQJ5fGxuEjq9kq";
+  public static final String NEW_PROJECT_NAME = "Project " + System.currentTimeMillis();
+  public static final String NEW_PROJECT_DESCRIPTION =
+      "Project Description " + System.currentTimeMillis();
+
+  public static final String PROJECT_SUCCESSFULLY_DELETED_MESSAGE =
+      "Your project was successfully deleted.";
 }

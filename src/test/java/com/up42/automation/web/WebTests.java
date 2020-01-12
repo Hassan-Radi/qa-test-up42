@@ -13,18 +13,24 @@
 package com.up42.automation.web;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.up42.automation.BaseTest;
+import com.up42.component.NotificationComponent;
 import com.up42.data.TestData;
 import com.up42.pages.HomePage;
 import com.up42.pages.LandingPage;
 import com.up42.pages.LoginPage;
+import com.up42.pages.ProjectPage;
 
 public class WebTests extends BaseTest {
 
+  private HomePage homePage;
+  private ProjectPage projectPage;
+
   @Test
-  public void loginToCustomerPortal() {
+  public void loginToWebsite() {
     LOGGER.info("STEP 1 - Navigating to the website.");
     LandingPage landingPage = new LandingPage();
 
@@ -32,7 +38,36 @@ public class WebTests extends BaseTest {
     LoginPage loginPage = landingPage.navigateToLoginPage();
 
     LOGGER.info("STEP 3 - Login with valid credentials.");
-    HomePage homePage = loginPage.login(TestData.EMAIL, TestData.PASSWORD);
+    homePage = loginPage.login(TestData.EMAIL, TestData.PASSWORD);
     Assert.assertTrue(homePage.isWelcomeTextDisplayed(), "Welcome text is not displayed.");
+  }
+
+  @Test(dependsOnMethods = "loginToWebsite")
+  public void createNewProject() {
+    LOGGER.info("STEP 4 - Creating a new project.");
+    projectPage =
+        homePage.startProject(TestData.NEW_PROJECT_NAME, TestData.NEW_PROJECT_DESCRIPTION);
+    Assert.assertEquals(
+        projectPage.getProjectName(), TestData.NEW_PROJECT_NAME, "Project name is incorrect.");
+    Assert.assertEquals(
+        projectPage.getProjectDescription(),
+        TestData.NEW_PROJECT_DESCRIPTION,
+        "Project description is incorrect.");
+  }
+
+  @AfterClass
+  public void teardown() {
+    /**
+     * You need to do proper cleanup here and delete the project you just created to leave the
+     * system as it was found before the tests.
+     */
+    LOGGER.info("Cleaning up after the tests by deleting the project that was created...");
+    NotificationComponent notificationComponent = projectPage.deleteCurrentProject();
+    Assert.assertEquals(
+        notificationComponent.getNotificationText(),
+        TestData.PROJECT_SUCCESSFULLY_DELETED_MESSAGE,
+        "Incorrect message displated.");
+
+    super.tearDown();
   }
 }

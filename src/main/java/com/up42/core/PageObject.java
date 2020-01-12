@@ -33,7 +33,7 @@ public class PageObject {
 
   public PageObject() {
     driver = DriverManager.getDriver();
-    wait = new WebDriverWait(driver, TestData.TEN_SECONDS, TestData.FIFTY_MILLI_SECONDS);
+    wait = new WebDriverWait(driver, TestData.TEN_SECONDS, TestData.HALF_SECOND);
 
     PageFactory.initElements(driver, this);
   }
