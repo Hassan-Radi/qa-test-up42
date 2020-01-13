@@ -14,6 +14,7 @@ package com.up42.automation.web;
 
 import java.util.Arrays;
 
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -21,7 +22,10 @@ import org.testng.annotations.Test;
 import com.up42.automation.BaseTest;
 import com.up42.component.CookieConsentComponent;
 import com.up42.component.NotificationComponent;
+import com.up42.core.PageObject;
 import com.up42.data.TestData;
+import com.up42.data.api.AccessTokenResponse;
+import com.up42.data.api.JobResponse;
 import com.up42.pages.HomePage;
 import com.up42.pages.LandingPage;
 import com.up42.pages.LoginPage;
@@ -29,10 +33,20 @@ import com.up42.pages.ProjectPage;
 import com.up42.pages.WorkflowPage;
 import com.up42.util.Helper;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+
 public class WebTests extends BaseTest {
 
   private HomePage homePage;
   private ProjectPage projectPage;
+  private String projectId;
+  private String projectApiKey;
+  private String workflowId;
+  private String accessTokenValue;
+  private String jobId;
 
   @Test
   public void loginToWebsite() {
@@ -70,6 +84,13 @@ public class WebTests extends BaseTest {
         projectPage.getProjectDescription(),
         TestData.NEW_PROJECT_DESCRIPTION,
         "Project description is incorrect.");
+
+    // wait for the URL to change first
+    PageObject.getWait().until(ExpectedConditions.urlMatches(TestData.PROJECT_URL_REGEX));
+
+    // Extract the project ID from the URL
+    projectId = Helper.extractGroupFromRegex(TestData.PROJECT_URL_REGEX, driver.getCurrentUrl());
+    LOGGER.info(String.format("Extracted the project's ID = [%s]", projectId));
   }
 
   @Test(dependsOnMethods = "createNewProject")
@@ -97,16 +118,99 @@ public class WebTests extends BaseTest {
                     workflowPage.getProcessingBlocksFromPipeline().get(0).getPipelineName(),
                     it.getBlockName(),
                     "Wrong processing block was found."));
+
+    // wait for the URL to change first
+    PageObject.getWait().until(ExpectedConditions.urlMatches(TestData.WORKFLOW_URL_REGEX));
+
+    // Extract the workflow ID from the URL
+    workflowId = Helper.extractGroupFromRegex(TestData.WORKFLOW_URL_REGEX, driver.getCurrentUrl());
+    LOGGER.info(String.format("Extracted the workflow's ID = [%s]", workflowId));
+
+    // Extract the Project API key from the 'Settings' section of the website
+    projectApiKey = projectPage.extractProjectApiKey();
+    LOGGER.info(String.format("Extracted the project's API key = [%s]", projectApiKey));
   }
 
-  @AfterClass
+  @Test(dependsOnMethods = "createNewWorkflow")
+  public void getAccesToken() {
+    LOGGER.info("Connecting to the API to fetch an access token...");
+    RestAssured.baseURI = String.format(TestData.API_OAUTH_TOKEN_URL, projectId, projectApiKey);
+    RequestSpecification httpRequest =
+        RestAssured.given()
+            .contentType(ContentType.URLENC)
+            .param(TestData.GRANT_TYPE_PARAM_NAME, TestData.GRANT_TYPE_PARAM_VALUE);
+
+    // Perform the POST operation
+    Response response = httpRequest.post();
+
+    // parse the response to a data object
+    AccessTokenResponse accessToken = response.getBody().as(AccessTokenResponse.class);
+
+    accessTokenValue = accessToken.getAccess_token();
+
+    LOGGER.info("Got the access token from the API.");
+    // verify the status code and content type
+    response.then().assertThat().statusCode(200).and().contentType(ContentType.JSON);
+  }
+
+  @Test(dependsOnMethods = "getAccesToken")
+  public void createAndRunJob() {
+    LOGGER.info("Connecting to the API to create a new job to run the workflow...");
+    RestAssured.baseURI = String.format(TestData.CREATE_RUN_JOB_URL, projectId, workflowId);
+    RequestSpecification httpRequest =
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .auth()
+            .oauth2(accessTokenValue)
+            .body(TestData.CREATE_RUN_JOB_JSON_BODY);
+
+    // Perform the POST operation
+    Response response = httpRequest.post();
+
+    // parse the response to a data object
+    JobResponse jobResponse = response.getBody().as(JobResponse.class);
+
+    jobId = jobResponse.getData().getId();
+    LOGGER.info("Job created and is scheduled to run...");
+
+    // verify the status code and content type
+    response.then().assertThat().statusCode(200).and().contentType(ContentType.JSON);
+  }
+
+  @Test(dependsOnMethods = "createAndRunJob")
+  public void testJobStatus() {
+    LOGGER.info("Connecting to the API check on the job's status...");
+    RestAssured.baseURI = String.format(TestData.RETRIEVE_JOB_DETAILS, projectId, jobId);
+    RequestSpecification httpRequest = RestAssured.given().auth().oauth2(accessTokenValue);
+
+    /** Keep looping until the job succeeds */
+    LOGGER.info("Polling until the job finishes execution...");
+    Response response;
+    String statusValue;
+    do {
+      // Perform the POST operation
+      response = httpRequest.get();
+
+      JobResponse jobResponse = response.getBody().as(JobResponse.class);
+      statusValue = jobResponse.getData().getStatus();
+      LOGGER.info(String.format("Job's status is: [%s].", statusValue));
+
+      // wait for a second and try again
+      Helper.sleep(TestData.SECOND_IN_MILLI);
+    } while (!statusValue.equals(TestData.JOB_SUCCESSFUL_STATUS));
+
+    // verify the status code and content type
+    response.then().assertThat().statusCode(200).and().contentType(ContentType.JSON);
+  }
+
+  @AfterClass()
   public void teardown() {
     // Wait for a second before starting the teardown process for all actions to be done
     Helper.sleep(TestData.SECOND_IN_MILLI);
 
     /**
-     * You need to do proper cleanup here and delete the project you just created to leave the
-     * system as it was found before the tests.
+     * We need to do proper cleanup here and delete the project we just created to leave the system
+     * as it was found before the tests.
      */
     LOGGER.info("Cleaning up after the tests by deleting the project that was created...");
     NotificationComponent notificationComponent = projectPage.deleteCurrentProject();

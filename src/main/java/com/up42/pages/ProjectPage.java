@@ -50,6 +50,9 @@ public class ProjectPage extends PageObject {
   @FindBy(xpath = "//button[contains(text(),'Create Workflow')]")
   private WebElement createNewWorkflowButton;
 
+  @FindBy(xpath = "//pre/span")
+  private WebElement projectApiKeyText;
+
   /** @return A String representing the project name */
   public String getProjectName() {
     return projectNameText.getText();
@@ -86,5 +89,17 @@ public class ProjectPage extends PageObject {
     createNewWorkflowButton.click();
 
     return new WorkflowPage();
+  }
+
+  /**
+   * Navigates to the project's settings section and extracts the project's API key
+   *
+   * @return The projects's API key in a String format
+   */
+  public String extractProjectApiKey() {
+    LOGGER.info("Clicking on the 'Settings' link...");
+    projectSettingsLink.click();
+
+    return projectApiKeyText.getText();
   }
 }

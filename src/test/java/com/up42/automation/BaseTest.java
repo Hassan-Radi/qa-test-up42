@@ -22,8 +22,6 @@ import org.testng.annotations.BeforeMethod;
 
 import com.up42.core.DriverManager;
 import com.up42.core.PageObject;
-import com.up42.data.TestData;
-import com.up42.util.Helper;
 
 /** Base test class for the common setup and driver creation for all the test cases. */
 public class BaseTest {
@@ -50,7 +48,7 @@ public class BaseTest {
     LOGGER.info(
         "\n*************************************************************************************\n"
             + "*************************************NEW TEST****************************************\n"
-            + "*************************************************************************************");
+            + "*************************************************************************************\n\n");
   }
 
   @BeforeClass

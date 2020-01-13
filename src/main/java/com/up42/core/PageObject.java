@@ -107,4 +107,12 @@ public class PageObject {
 
     return field;
   }
+
+  /**
+   * @return An instance of the WebDriverWait to use for waiting actions associated with the
+   *     WebDriver
+   */
+  public static WebDriverWait getWait() {
+    return wait;
+  }
 }
