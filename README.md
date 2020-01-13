@@ -23,6 +23,7 @@ compile test -DexecutionMode=LOCAL -Dbrowser=chrome -Dtest=WebTests -Dwebdriver.
      - The browser name to run on. Can be one of the following values: **chrome**, **firefox**
 
 ### Tested on:
+This code has been created using **Eclipse 2019-12 (4.14.0)** and **JDK 1.8.0_231** and has been tested on the following browser version.
 - Locally:
      1. Firefox 71
      2. Firefox 72.0.1
