@@ -1,11 +1,11 @@
 # Steps to run the code:
-1- To run locally, you need to download the correct driver GeckoDriver/ChromeDriver depending on the browser version you are using:
-      - **ChromeDriver:** can be downloaded from here: https://chromedriver.chromium.org/downloads
-      - **GeckoDriver:** can be downloaded from here: https://github.com/mozilla/geckodriver/releases
-2- Then you need to provide the correct *system property*, depending on the browser you selected at step #1 above.
-      - **webdriver.chrome.driver:** the driver path for Chrome browser
-      - **webdriver.gecko.driver:** the driver path for Firefox browser
-3- To run on BrowserStack, you need to provide the following *environment variables*:
+- To run locally, you need to download the correct driver GeckoDriver/ChromeDriver depending on the browser version you are using:
+    1. **ChromeDriver:** can be downloaded from here: https://chromedriver.chromium.org/downloads
+    2.  **GeckoDriver:** can be downloaded from here: https://github.com/mozilla/geckodriver/releases
+- Then you need to provide the correct *system property*, depending on the browser you selected at step #1 above.
+    1. **webdriver.chrome.driver:** the driver path for Chrome browser
+    2. **webdriver.gecko.driver:** the driver path for Firefox browser
+- To run on BrowserStack, you need to provide the following *environment variables*:
     1. **BROWSERSTACK_USER:** The username to access BrowserStack.
     2. **BROWSERSTACK_TOKEN:** The token to access BrowserStack.
 
