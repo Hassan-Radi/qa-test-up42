@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import com.up42.data.TestData;
 import com.up42.data.api.AccessTokenResponse;
+import com.up42.data.api.CreateRunJobResponse;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -28,6 +29,7 @@ public class APITests {
 
   protected static final Logger LOGGER = Logger.getLogger(APITests.class.getName());
   private static String accessTokenValue;
+  private static String jobId;
 
   @Test
   public void getAccesToken() {
@@ -65,7 +67,9 @@ public class APITests {
     Response response = httpRequest.post();
 
     // parse the response to a data object
-    LOGGER.info(response.getBody().asString());
+    CreateRunJobResponse jobResponse = response.getBody().as(CreateRunJobResponse.class);
+
+    jobId = jobResponse.getData().getId();
 
     // verify the status code and content type
     response.then().assertThat().statusCode(200).and().contentType(ContentType.JSON);
