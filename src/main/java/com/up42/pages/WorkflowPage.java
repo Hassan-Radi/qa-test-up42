@@ -13,6 +13,8 @@
 package com.up42.pages;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.openqa.selenium.WebElement;
@@ -20,6 +22,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.up42.component.BlocksCatalogueComponent;
+import com.up42.component.PipelineComponent;
 import com.up42.core.PageObject;
 import com.up42.data.Block;
 import com.up42.data.TestData;
@@ -28,6 +31,10 @@ import com.up42.util.Helper;
 public class WorkflowPage extends PageObject {
 
   protected static final Logger LOGGER = Logger.getLogger(WorkflowPage.class.getName());
+  private static final String DATA_BLOCKS_IN_PIPELINE_BASE_LOCATOR =
+      "(//h4[contains(text(),'Processing')]//preceding::div[contains(@class,'block_')])";
+  private static final String PROCESSING_BLOCKS_IN_PIPELINE_BASE_LOCATOR =
+      "(//h4[contains(text(),'Processing')]//following::div[contains(@class,'block_')])";
 
   public WorkflowPage() {
     /** Make sure that the page loaded successfully before interacting with it */
@@ -61,6 +68,12 @@ public class WorkflowPage extends PageObject {
 
   @FindBy(xpath = "//button[contains(text(),'Configure Job')]")
   private WebElement configureJobButton;
+
+  @FindBy(xpath = DATA_BLOCKS_IN_PIPELINE_BASE_LOCATOR)
+  private List<WebElement> dataBlocksInPipelineList;
+
+  @FindBy(xpath = PROCESSING_BLOCKS_IN_PIPELINE_BASE_LOCATOR)
+  private List<WebElement> processingBlocksInPipelineList;
 
   /**
    * Create a new workflow using the provided data.
@@ -127,5 +140,33 @@ public class WorkflowPage extends PageObject {
   public BlocksCatalogueComponent openProcessingCatalogue() {
     addProcessingBlockButton.click();
     return new BlocksCatalogueComponent();
+  }
+
+  /** @return A list of all the data blocks from the pipeline */
+  public LinkedList<PipelineComponent> getDataBlocksFromPipeline() {
+    // use a LinkedList here to retain the order of creation
+    LinkedList<PipelineComponent> pipelineComponent = new LinkedList<>();
+
+    // initialize the list of data blocks from the pipeline
+    for (int i = 0; i < dataBlocksInPipelineList.size(); i++) {
+      pipelineComponent.add(
+          new PipelineComponent(
+              String.format("%s[%s]", DATA_BLOCKS_IN_PIPELINE_BASE_LOCATOR, i + 1)));
+    }
+    return pipelineComponent;
+  }
+
+  /** @return A list of all the processing blocks from the pipeline */
+  public LinkedList<PipelineComponent> getProcessingBlocksFromPipeline() {
+    // use a LinkedList here to retain the order of creation
+    LinkedList<PipelineComponent> pipelineComponent = new LinkedList<>();
+
+    // initialize the list of processing blocks from the pipeline
+    for (int i = 0; i < processingBlocksInPipelineList.size(); i++) {
+      pipelineComponent.add(
+          new PipelineComponent(
+              String.format("%s[%s]", PROCESSING_BLOCKS_IN_PIPELINE_BASE_LOCATOR, i + 1)));
+    }
+    return pipelineComponent;
   }
 }

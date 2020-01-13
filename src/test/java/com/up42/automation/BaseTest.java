@@ -60,9 +60,6 @@ public class BaseTest {
 
   @AfterClass
   public static void tearDown() {
-    // Wait for a second before starting the teardown process for all actions to be done
-    Helper.sleep(TestData.SECOND_IN_MILLI);
-
     /**
      * clear after the test is done executing by terminating the running browser instance to prevent
      * memory leaks.

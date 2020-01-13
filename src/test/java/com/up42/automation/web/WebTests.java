@@ -12,6 +12,8 @@
  */
 package com.up42.automation.web;
 
+import java.util.Arrays;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -25,6 +27,7 @@ import com.up42.pages.LandingPage;
 import com.up42.pages.LoginPage;
 import com.up42.pages.ProjectPage;
 import com.up42.pages.WorkflowPage;
+import com.up42.util.Helper;
 
 public class WebTests extends BaseTest {
 
@@ -33,6 +36,10 @@ public class WebTests extends BaseTest {
 
   @Test
   public void loginToWebsite() {
+    /**
+     * TODO: Need to handle an edge case here where the test would fail if the account already have
+     * a project initially (excluding the Demo one).
+     */
     LOGGER.info("STEP 1 - Navigating to the website.");
     LandingPage landingPage = new LandingPage();
 
@@ -41,6 +48,8 @@ public class WebTests extends BaseTest {
 
     LOGGER.info("STEP 3 - Login with valid credentials.");
     homePage = loginPage.login(TestData.EMAIL, TestData.PASSWORD);
+
+    LOGGER.info("Verify that the user is logged in successfully to the website.");
     Assert.assertTrue(homePage.isWelcomeTextDisplayed(), "Welcome text is not displayed.");
 
     LOGGER.info("Accepting the cookie consent dialog before you move on to the next test...");
@@ -52,6 +61,9 @@ public class WebTests extends BaseTest {
     LOGGER.info("STEP 4 - Creating a new project.");
     projectPage =
         homePage.startProject(TestData.NEW_PROJECT_NAME, TestData.NEW_PROJECT_DESCRIPTION);
+
+    LOGGER.info(
+        "Verify that the project have been created successfully with the correct project name & description.");
     Assert.assertEquals(
         projectPage.getProjectName(), TestData.NEW_PROJECT_NAME, "Project name is incorrect.");
     Assert.assertEquals(
@@ -70,11 +82,28 @@ public class WebTests extends BaseTest {
         TestData.DATA_BLOCKS,
         TestData.PROCESSING_BLOCKS);
 
-    // TODO: Verify that the components have been added successfully.
+    LOGGER.info("Verify that the data/processing blocks have been added successfully.");
+    Arrays.stream(TestData.DATA_BLOCKS)
+        .forEach(
+            it ->
+                Assert.assertEquals(
+                    workflowPage.getDataBlocksFromPipeline().get(0).getPipelineName(),
+                    it.getBlockName(),
+                    "Wrong data block was found."));
+    Arrays.stream(TestData.PROCESSING_BLOCKS)
+        .forEach(
+            it ->
+                Assert.assertEquals(
+                    workflowPage.getProcessingBlocksFromPipeline().get(0).getPipelineName(),
+                    it.getBlockName(),
+                    "Wrong processing block was found."));
   }
 
   @AfterClass
   public void teardown() {
+    // Wait for a second before starting the teardown process for all actions to be done
+    Helper.sleep(TestData.SECOND_IN_MILLI);
+
     /**
      * You need to do proper cleanup here and delete the project you just created to leave the
      * system as it was found before the tests.
@@ -85,6 +114,9 @@ public class WebTests extends BaseTest {
         notificationComponent.getNotificationText(),
         TestData.PROJECT_SUCCESSFULLY_DELETED_MESSAGE,
         "Incorrect message displated.");
+
+    // Wait for a second before starting the main teardown process for all actions to be done
+    Helper.sleep(TestData.SECOND_IN_MILLI);
 
     super.tearDown();
   }
