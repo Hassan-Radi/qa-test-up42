@@ -9,9 +9,11 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<testng.version>7.0.0</testng.version>
+		<testng.version>7.1.0</testng.version>
 		<selenium.version>3.141.59</selenium.version>
-		<log4j.version>2.12.1</log4j.version>
+		<log4j.version>2.13.0</log4j.version>
+		<rest-assured.version>4.1.2</rest-assured.version>
+		<jackson.version>2.10.1</jackson.version>
 	</properties>
 
 	<build>
@@ -58,6 +60,19 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>${log4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>${rest-assured.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -105,8 +105,8 @@ public class WebTests extends BaseTest {
     Helper.sleep(TestData.SECOND_IN_MILLI);
 
     /**
-     * You need to do proper cleanup here and delete the project you just created to leave the
-     * system as it was found before the tests.
+     * We need to do proper cleanup here and delete the project we just created to leave the system
+     * as it was found before the tests.
      */
     LOGGER.info("Cleaning up after the tests by deleting the project that was created...");
     NotificationComponent notificationComponent = projectPage.deleteCurrentProject();

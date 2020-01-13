@@ -79,10 +79,18 @@ public class TestData {
   public static final String WAIT_FOR_PAGE_LOADING = "return document.readyState";
   public static final String COMPLETE_STATE = "complete";
 
-  // Misc
-  public static final String PROJECT_VALUE = "UP42";
   // URLs
   public static final String LANDING_PAGE = "https://up42.com/";
+  public static final String API_OAUTH_TOKEN_URL = "https://%s:%s@api.up42.com/oauth/token";
+  public static final String CREATE_RUN_JOB_URL =
+      "https://api.up42.com/projects/%s/workflows/%s/jobs";
+  // TODO: Remove those constants and replace them with values from the test itself
+  public static final String PROJECT_ID = "64f83145-d9a7-46a4-98e0-0131656235da";
+  public static final String PROJECT_API_KEY = "OlKM41Fz.bSLFt1cmBJDqw9zC687X7ajcVBSQ7ynvbL4";
+  public static final String WORKFLOW_ID = "9321c0c5-ff60-45d3-aef7-f24dceab01bc";
+
+  // Misc
+  public static final String PROJECT_VALUE = "UP42";
   public static final String EMAIL = "hassan.muhammad1990@gmail.com";
   public static final String PASSWORD = "aWQJ5fGxuEjq9kq";
   public static final String NEW_PROJECT_NAME = "Project " + System.currentTimeMillis();
@@ -95,4 +103,8 @@ public class TestData {
       "Workflow Description " + System.currentTimeMillis();
   public static Block[] DATA_BLOCKS = {new Block("Sentinel-2 L1C MSI AOI clipped", "by Sobloo")};
   public static Block[] PROCESSING_BLOCKS = {new Block("Sharpening Filter", "by UP42")};
+  public static final String GRANT_TYPE_PARAM_NAME = "grant_type";
+  public static final String GRANT_TYPE_PARAM_VALUE = "client_credentials";
+  public static final String CREATE_RUN_JOB_JSON_BODY =
+      "{\"sharpening:1\":{\"strength\":\"medium\"},\"sobloo-s2-l1c-aoiclipped:1\":{\"ids\":[\"S2A_MSIL1C_20190820T110621_N0208_R137_T30STF_20190820T132731\"],\"bbox\":[-5.369294,36.104358,-5.33309,36.165145],\"limit\":1,\"zoom_level\":14}}";
 }
