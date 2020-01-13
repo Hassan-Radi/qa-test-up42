@@ -18,7 +18,8 @@ import org.testng.annotations.Test;
 
 import com.up42.data.TestData;
 import com.up42.data.api.AccessTokenResponse;
-import com.up42.data.api.CreateRunJobResponse;
+import com.up42.data.api.JobResponse;
+import com.up42.util.Helper;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -67,9 +68,33 @@ public class APITests {
     Response response = httpRequest.post();
 
     // parse the response to a data object
-    CreateRunJobResponse jobResponse = response.getBody().as(CreateRunJobResponse.class);
+    JobResponse jobResponse = response.getBody().as(JobResponse.class);
 
     jobId = jobResponse.getData().getId();
+
+    // verify the status code and content type
+    response.then().assertThat().statusCode(200).and().contentType(ContentType.JSON);
+  }
+
+  @Test(dependsOnMethods = "createAndRunJob")
+  public void testJobStatus() {
+    RestAssured.baseURI = String.format(TestData.RETRIEVE_JOB_DETAILS, TestData.PROJECT_ID, jobId);
+    RequestSpecification httpRequest = RestAssured.given().auth().oauth2(accessTokenValue);
+
+    /** Keep looping until the job succeeds */
+    Response response;
+    String statusValue;
+    do {
+      // Perform the POST operation
+      response = httpRequest.get();
+
+      JobResponse jobResponse = response.getBody().as(JobResponse.class);
+      statusValue = jobResponse.getData().getStatus();
+      LOGGER.info(String.format("Value of status is: [%s].", statusValue));
+
+      // wait for a second and try again
+      Helper.sleep(TestData.SECOND_IN_MILLI);
+    } while (!statusValue.equals(TestData.JOB_SUCCESSFUL_STATUS));
 
     // verify the status code and content type
     response.then().assertThat().statusCode(200).and().contentType(ContentType.JSON);

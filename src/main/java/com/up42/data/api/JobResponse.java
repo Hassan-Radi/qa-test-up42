@@ -2,7 +2,7 @@ package com.up42.data.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class CreateRunJobResponse {
+public class JobResponse {
 
   private String error;
   private Data data;
