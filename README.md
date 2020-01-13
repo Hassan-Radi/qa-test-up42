@@ -8,13 +8,11 @@
 - To run on BrowserStack, you need to provide the following *environment variables*:
      1. **BROWSERSTACK_USER:** The username to access BrowserStack.
      2. **BROWSERSTACK_TOKEN:** The token to access BrowserStack.
+- This code is written assuming that the account always starts with 0 projects (excluding the Demo one). If this is not the case, please remove all projects except the Demo one manually. There is a TODO to fix this.
 
 
 # Run command:
-compile test -DexecutionMode=LOCAL -Dbrowser=chrome -Dtest=WebTests -Dwebdriver.chrome.driver="PATH_TO_DRIVER_FILE"
-
-# Assumptions:
-- Assuming that the account always starts with 0 projects (excluding the Demo one).
+mvn compile test -DexecutionMode=LOCAL -Dbrowser=chrome -Dtest=WebTests -Dwebdriver.chrome.driver="PATH_TO_DRIVER_FILE"
 
 # Run configurations:
 - executionMode:
@@ -22,8 +20,8 @@ compile test -DexecutionMode=LOCAL -Dbrowser=chrome -Dtest=WebTests -Dwebdriver.
 - browser:
      - The browser name to run on. Can be one of the following values: **chrome**, **firefox**
 
-### Tested on:
-This code has been created using **Eclipse 2019-12 (4.14.0)** and **JDK 1.8.0_231** and has been tested on the following browser version.
+## Testing:
+This code has been created using **Eclipse 2019-12 (4.14.0)** and **JDK 1.8.0_231** and has been tested on the following browser versions.
 - Locally:
      1. Firefox 71
      2. Firefox 72.0.1
