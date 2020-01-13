@@ -12,6 +12,9 @@
  */
 package com.up42.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -136,5 +139,19 @@ public class Helper {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Parses the regular expression and extracts the first group from it or returns null if it fails.
+   *
+   * @param regex The regular expression to parse.
+   * @param data The string value to use with the regex.
+   * @return A String representing the extracted part of the data according to the regex
+   */
+  public static String extractGroupFromRegex(String regex, String data) {
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(data);
+
+    return matcher.find() ? matcher.group(1) : null;
   }
 }
